@@ -3,6 +3,7 @@ package com.QuantityMeasurementApp;
 public class QuantityMeasurementApp {
 
 	// UC - 1
+	
 	public static class Feet {
 		private final double value;
 
