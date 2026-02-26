@@ -1,83 +1,134 @@
 package com.QuantityMeasurementApp;
 
 public class QuantityMeasurementApp {
-
-	// ENUM
-	enum LengthUnit {
-
-		FEET(1.0), 
-		INCH(1.0 / 12), 
-		YARD(3.0), 
-		CENTIMETER(0.393701 / 12);
-
-		private final double conversionFactor;
-
-		LengthUnit(double conversionFactor) {
-			this.conversionFactor = conversionFactor;
-		}
-
-		public double getConversionFactor() {
-			return conversionFactor;
-		}
-	}
-
-	// ===== GENERIC CLASS =====
-	public static class QuantityLength {
-
+	public static class Feet {
 		private final double value;
-		private final LengthUnit unit;
 
-		public QuantityLength(double value, LengthUnit unit) {
-
-			if (unit == null) {
-				throw new IllegalArgumentException("Unit cannot be null");
-			}
-
+		public Feet(double value) {
 			this.value = value;
-			this.unit = unit;
-		}
-
-		private double toFeet() {
-			return this.value * this.unit.getConversionFactor();
 		}
 
 		@Override
 		public boolean equals(Object obj) {
 
-			if (this == obj)
+			if (this == obj) {
 				return true;
+			}
 
-			if (obj == null)
+			if (obj == null || getClass() != obj.getClass()) {
 				return false;
+			}
 
-			if (getClass() != obj.getClass())
-				return false;
+			Feet other = (Feet) obj;
 
-			QuantityLength other = (QuantityLength) obj;
-
-			return Double.compare(this.toFeet(), other.toFeet()) == 0;
+			return Double.compare(this.value, other.value) == 0;
 		}
 	}
 
-	// MAIN METHOD 
+	// UC - 2
+	public static class Inches {
+
+		private final double value;
+
+		public Inches(double value) {
+			this.value = value;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+
+			if (this == obj) {
+				return true;
+			}
+
+			if (obj == null || getClass() != obj.getClass()) {
+				return false;
+			}
+
+			Inches other = (Inches) obj;
+			return Double.compare(this.value, other.value) == 0;
+		}
+	}
+
+	// UC - 3
+	public enum Unit {
+
+		FEET(12.0), INCH(1.0), YARDS(36.0), CENTIMETERS(0.393701);
+
+		private final double conversionFactorToInch;
+
+		Unit(double conversionFactorToInch) {
+			this.conversionFactorToInch = conversionFactorToInch;
+		}
+
+		public double toInch(double value) {
+			return value * conversionFactorToInch;
+		}
+	}
+
+	public static class QuantityLength {
+
+		private final double value;
+		private final Unit unit;
+
+		public QuantityLength(double value, Unit unit) {
+			this.value = value;
+			this.unit = unit;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+
+			if (this == obj) {
+				return true;
+			}
+
+			if (obj == null || getClass() != obj.getClass()) {
+				return false;
+			}
+
+			QuantityLength other = (QuantityLength) obj;
+
+			double thisInInches = this.unit.toInch(this.value);
+			double otherInInches = other.unit.toInch(other.value);
+
+			return Double.compare(thisInInches, otherInInches) == 0;
+		}
+	}
+
 	public static void main(String[] args) {
+		Feet feet1 = new Feet(1.0);
+		Feet feet2 = new Feet(1.0);
 
-		QuantityLength q1 = new QuantityLength(1.0, LengthUnit.YARD);
+		boolean result = feet1.equals(feet2);
 
-		QuantityLength q2 = new QuantityLength(3.0, LengthUnit.FEET);
+		System.out.println("Input: 1.0 ft and 1.0 ft");
+		System.out.println("Output: Equal (" + result + ")");
 
-		System.out.println("1 Yard == 3 Feet ? " + q1.equals(q2));
+		// UC - 2
+		Inches inch1 = new Inches(1.0);
+		Inches inch2 = new Inches(1.0);
 
-		QuantityLength q3 = new QuantityLength(1.0, LengthUnit.YARD);
+		boolean inchResult = inch1.equals(inch2);
 
-		QuantityLength q4 = new QuantityLength(36.0, LengthUnit.INCH);
+		System.out.println("Input: 1.0 inch and 1.0 inch");
+		System.out.println("Output: Equal (" + inchResult + ")");
 
-		System.out.println("1 Yard == 36 Inches ? " + q3.equals(q4));
+		// UC - 3
+		QuantityLength feet = new QuantityLength(1.0, Unit.FEET);
+		QuantityLength inch = new QuantityLength(12.0, Unit.INCH);
 
-		QuantityLength q5 = new QuantityLength(1.0, LengthUnit.CENTIMETER);
+		boolean resultUC3 = feet.equals(inch);
 
-		QuantityLength q6 = new QuantityLength(0.393701, LengthUnit.INCH);
+		System.out.println("Input: 1.0 ft and 12.0 inch");
+		System.out.println("Output: Equal (" + resultUC3 + ")");
 
-		System.out.println("1 cm == 0.393701 inch ? " + q5.equals(q6));
+		// UC - 4
+		System.out.println("UC4 → " + new QuantityLength(1.0, Unit.YARDS).equals(new QuantityLength(3.0, Unit.FEET)));
+
+		System.out.println("UC4 → " + new QuantityLength(1.0, Unit.YARDS).equals(new QuantityLength(36.0, Unit.INCH)));
+
+		System.out.println(
+				"UC4 → " + new QuantityLength(1.0, Unit.CENTIMETERS).equals(new QuantityLength(0.393701, Unit.INCH)));
 	}
 }
