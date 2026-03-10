@@ -704,4 +704,141 @@ public class QuantityMeasurementAppTest {
                 () -> QuantityMeasurementApp.QuantityLength.add(a, b, null));
     }
 
+    
+    
+ // ---------- UC8 TESTS : LengthUnit Standalone Enum ----------
+
+    @Test
+    void testLengthUnitEnum_FeetConstant() {
+        assertEquals(1.0, LengthUnit.FEET.convertToBaseUnit(1.0));
+    }
+
+    @Test
+    void testLengthUnitEnum_InchesConstant() {
+        double result = LengthUnit.INCH.convertToBaseUnit(12.0);
+        assertEquals(1.0, result, 1e-6);
+    }
+
+    @Test
+    void testLengthUnitEnum_YardsConstant() {
+        double result = LengthUnit.YARDS.convertToBaseUnit(1.0);
+        assertEquals(3.0, result, 1e-6);
+    }
+
+    @Test
+    void testLengthUnitEnum_CentimetersConstant() {
+        double result = LengthUnit.CENTIMETERS.convertToBaseUnit(30.48);
+        assertEquals(1.0, result, 1e-6);
+    }
+
+
+    // ---------- Base Unit Conversion Tests ----------
+
+    @Test
+    void testConvertToBaseUnit_FeetToFeet() {
+        double result = LengthUnit.FEET.convertToBaseUnit(5.0);
+        assertEquals(5.0, result);
+    }
+
+    @Test
+    void testConvertToBaseUnit_InchesToFeet() {
+        double result = LengthUnit.INCH.convertToBaseUnit(12.0);
+        assertEquals(1.0, result, 1e-6);
+    }
+
+    @Test
+    void testConvertToBaseUnit_YardsToFeet() {
+        double result = LengthUnit.YARDS.convertToBaseUnit(1.0);
+        assertEquals(3.0, result);
+    }
+
+    @Test
+    void testConvertToBaseUnit_CentimetersToFeet() {
+        double result = LengthUnit.CENTIMETERS.convertToBaseUnit(30.48);
+        assertEquals(1.0, result, 1e-6);
+    }
+
+
+    // ---------- Convert From Base Unit ----------
+
+    @Test
+    void testConvertFromBaseUnit_FeetToFeet() {
+        double result = LengthUnit.FEET.convertFromBaseUnit(2.0);
+        assertEquals(2.0, result);
+    }
+
+    @Test
+    void testConvertFromBaseUnit_FeetToInches() {
+        double result = LengthUnit.INCH.convertFromBaseUnit(1.0);
+        assertEquals(12.0, result);
+    }
+
+    @Test
+    void testConvertFromBaseUnit_FeetToYards() {
+        double result = LengthUnit.YARDS.convertFromBaseUnit(3.0);
+        assertEquals(1.0, result);
+    }
+
+    @Test
+    void testConvertFromBaseUnit_FeetToCentimeters() {
+        double result = LengthUnit.CENTIMETERS.convertFromBaseUnit(1.0);
+        assertEquals(30.48, result, 1e-6);
+    }
+
+
+    // ---------- QuantityLength Refactored Behaviour ----------
+
+    @Test
+    void testQuantityLengthRefactored_Equality() {
+
+        QuantityLength feet =
+                new QuantityLength(1.0, LengthUnit.FEET);
+
+        QuantityLength inch =
+                new QuantityLength(12.0, LengthUnit.INCH);
+
+        assertTrue(feet.equals(inch));
+    }
+
+    @Test
+    void testQuantityLengthRefactored_ConvertTo() {
+
+        QuantityLength feet =
+                new QuantityLength(1.0, LengthUnit.FEET);
+
+        QuantityLength inch = feet.convertTo(LengthUnit.INCH);
+
+        assertEquals(12.0, inch.convertTo(LengthUnit.INCH).convertTo(LengthUnit.INCH).convertTo(LengthUnit.INCH).value, 1e-6);
+    }
+
+    @Test
+    void testQuantityLengthRefactored_Add() {
+
+        QuantityLength a =
+                new QuantityLength(1.0, LengthUnit.FEET);
+
+        QuantityLength b =
+                new QuantityLength(12.0, LengthUnit.INCH);
+
+        QuantityLength result = a.add(b);
+
+        assertTrue(result.equals(
+                new QuantityLength(2.0, LengthUnit.FEET)
+        ));
+    }
+
+    @Test
+    void testQuantityLengthRefactored_AddWithTargetUnit() {
+
+        QuantityLength a =
+                new QuantityLength(1.0, LengthUnit.FEET);
+
+        QuantityLength b =
+                new QuantityLength(12.0, LengthUnit.INCH);
+
+        QuantityLength result =
+                QuantityLength.add(a, b, LengthUnit.YARDS);
+
+        assertEquals(0.6667, result.convertTo(LengthUnit.YARDS).convertTo(LengthUnit.YARDS).value, 1e-3);
+    }
 }
