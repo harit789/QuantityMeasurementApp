@@ -167,6 +167,32 @@ public class QuantityMeasurementApp {
 
                 return a.add(b);
             }
+         // UC7 → Addition with explicit target unit
+            public static QuantityLength add(QuantityLength a, QuantityLength b, Unit targetUnit) {
+
+                if (a == null || b == null) {
+                    throw new IllegalArgumentException("Operands cannot be null");
+                }
+
+                if (targetUnit == null) {
+                    throw new IllegalArgumentException("Target unit cannot be null");
+                }
+
+                if (!Double.isFinite(a.value) || !Double.isFinite(b.value)) {
+                    throw new IllegalArgumentException("Invalid numeric value");
+                }
+
+                // convert both values to base unit (inches)
+                double aInInch = a.unit.toInch(a.value);
+                double bInInch = b.unit.toInch(b.value);
+
+                double sumInInch = aInInch + bInInch;
+
+                // convert result to target unit
+                double resultValue = sumInInch / targetUnit.toInch(1.0);
+
+                return new QuantityLength(resultValue, targetUnit);
+            }
         }
         
         
@@ -270,5 +296,22 @@ public class QuantityMeasurementApp {
             QuantityLength d = new QuantityLength(3.0, Unit.FEET);
 
             System.out.println("Add: " + c + " + " + d + " → " + c.add(d));
+            
+            
+         // UC7 → Addition with explicit target unit
+
+            System.out.println("\nUC7 Addition with Target Unit:");
+
+            QuantityLength a = new QuantityLength(1.0, Unit.FEET);
+            QuantityLength b = new QuantityLength(12.0, Unit.INCH);
+
+            System.out.println("Add in FEET → " +
+                    QuantityLength.add(a, b, Unit.FEET));
+
+            System.out.println("Add in INCH → " +
+                    QuantityLength.add(a, b, Unit.INCH));
+
+            System.out.println("Add in YARDS → " +
+                    QuantityLength.add(a, b, Unit.YARDS));
         }
 }
