@@ -1,4 +1,4 @@
-public class QuantityMeasurementApp {
+class QuantityMeasurementApp {
 
     static class Feet {
 
@@ -7,7 +7,6 @@ public class QuantityMeasurementApp {
         public Feet(double value) {
             this.value = value;
         }
-
         @Override
         public boolean equals(Object obj) {
 
