@@ -1,68 +1,83 @@
 package com.QuantityMeasurementApp.model;
 
-import java.io.Serializable;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-public class QuantityMeasurementEntity implements Serializable {
+@Entity
+@Table(name = "quantity_measurements")
+public class QuantityMeasurementEntity {
 
-	private Long id;
-	private String operation;
-	private String measurementType;
-	private String result;
-	private boolean error;
-	private String message;
-	private LocalDateTime createdAt;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	public QuantityMeasurementEntity(String operation, String measurementType, String result) {
-		this.operation = operation;
-		this.measurementType = measurementType;
-		this.result = result;
-		this.error = false;
-		this.createdAt = LocalDateTime.now();
-	}
+    @Column(nullable = false)
+    private String operation;
 
-	public QuantityMeasurementEntity(String operation, String measurementType, String message, boolean error) {
-		this.operation = operation;
-		this.measurementType = measurementType;
-		this.message = message;
-		this.error = error;
-		this.createdAt = LocalDateTime.now();
-	}
+    @Column(nullable = false)
+    private String measurementType;
 
-	public Long getId() {
-		return id;
-	}
+    private String result;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    private boolean error;
 
-	public String getOperation() {
-		return operation;
-	}
+    private String message;
 
-	public String getMeasurementType() {
-		return measurementType;
-	}
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
-	public String getResult() {
-		return result;
-	}
+    // Default constructor - required by JPA
+    public QuantityMeasurementEntity() {}
 
-	public boolean hasError() {
-		return error;
-	}
+    // Constructor for successful operations
+    public QuantityMeasurementEntity(String operation, String measurementType, String result) {
+        this.operation = operation;
+        this.measurementType = measurementType;
+        this.result = result;
+        this.error = false;
+        this.createdAt = LocalDateTime.now();
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    // Constructor for error operations
+    public QuantityMeasurementEntity(String operation, String measurementType, String message, boolean error) {
+        this.operation = operation;
+        this.measurementType = measurementType;
+        this.message = message;
+        this.error = error;
+        this.createdAt = LocalDateTime.now();
+    }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+    // Auto set createdAt before saving to DB
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
 
-	@Override
-	public String toString() {
-		return "Entity[op=" + operation + ", type=" + measurementType + ", result=" + result + "]";
-	}
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getOperation() { return operation; }
+    public void setOperation(String operation) { this.operation = operation; }
+
+    public String getMeasurementType() { return measurementType; }
+    public void setMeasurementType(String measurementType) { this.measurementType = measurementType; }
+
+    public String getResult() { return result; }
+    public void setResult(String result) { this.result = result; }
+
+    public boolean hasError() { return error; }
+    public void setError(boolean error) { this.error = error; }
+
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+
+    @Override
+    public String toString() {
+        return "Entity[op=" + operation + ", type=" + measurementType + ", result=" + result + "]";
+    }
 }
