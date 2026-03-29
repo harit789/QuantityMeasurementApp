@@ -1,61 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <modelVersion>4.0.0</modelVersion>
+    <!-- Spring Boot Parent - this is the magic that brings everything in -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.3</version>
+        <relativePath/>
+    </parent>
 
-  <groupId>com</groupId>
-  <artifactId>QuantityMeasurementApp</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+    <groupId>com.QuantityMeasurementApp</groupId>
+    <artifactId>QuantityMeasurementApp</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>QuantityMeasurementApp</name>
+    <description>Quantity Measurement App with Spring Boot</description>
 
-  <name>AddressBook</name>
-  <url>http://maven.apache.org</url>
+    <properties>
+        <java.version>21</java.version>
+    </properties>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- Java version -->
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-  </properties>
-  
-  <dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
+    <dependencies>
 
-		<dependency>
-			<groupId>com.opencsv</groupId>
-			<artifactId>opencsv</artifactId>
-			<version>5.7.1</version>
-		</dependency>
+        <!-- Spring Web - for REST controllers -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
-		<!-- Source:
-		https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.13.4</version>
-			<scope>test</scope>
-		</dependency>
+        <!-- Spring Data JPA - replaces your JDBC code -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.10.1</version>
-		</dependency>
-		
-		<dependency>
-		<groupId>com.h2database</groupId>
-		<artifactId>h2</artifactId>
-		<version>2.2.224</version>
-		</dependency>
+        <!-- H2 Database - in-memory database for development -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
-	</dependencies>
+        <!-- Spring Security - basic security setup -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 
+        <!-- Validation - for @NotNull, @NotEmpty etc. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- Lombok - reduces boilerplate code -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Actuator - health check endpoints -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Test - for testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring Security Test -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Spring Boot Maven Plugin - allows mvn spring-boot:run -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
