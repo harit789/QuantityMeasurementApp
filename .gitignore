@@ -1,16 +1,18 @@
-# Maven build folder
+# Maven
 target/
 
-# Compiled files
-*.class
-
-# Eclipse
-.project
-.classpath
+# Eclipse / IDE files
 .settings/
+.classpath
+.project
 
-# OS junk
+# OS files
 .DS_Store
 Thumbs.db
 
-.gitignore
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
