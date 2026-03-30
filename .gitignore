@@ -14,3 +14,8 @@ target/
 Thumbs.db
 
 .gitignore
+
+.factorypath
+.project
+.classpath
+.settings/0
