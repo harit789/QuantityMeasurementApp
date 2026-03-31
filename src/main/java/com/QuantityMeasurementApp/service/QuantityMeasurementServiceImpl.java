@@ -9,68 +9,109 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class QuantityMeasurementServiceImpl implements IQuantityMeasurementService {
+public class QuantityMeasurementServiceImpl 
+        implements IQuantityMeasurementService {
 
     @Autowired
     private QuantityMeasurementRepository repo;
 
-    // No constructor needed - Spring injects repo automatically via @Autowired
-
-    private LengthUnit getLengthUnit(String unit) {
-        return LengthUnit.valueOf(unit);
+    // Get correct unit based on measurement type
+    private IMeasurable getUnit(String measurementType, String unit) {
+        switch (measurementType.toUpperCase()) {
+            case "LENGTH":
+                return LengthUnit.valueOf(unit);
+            case "TEMPERATURE":
+                return TemperatureUnit.valueOf(unit);
+            case "VOLUME":
+                return VolumeUnit.valueOf(unit);
+            case "WEIGHT":
+                return WeightUnit.valueOf(unit);
+            default:
+                throw new IllegalArgumentException(
+                    "Unknown measurement type: " + measurementType);
+        }
     }
 
     @Override
     public boolean compare(QuantityDTO q1, QuantityDTO q2) {
-        Quantity<LengthUnit> a = new Quantity<>(q1.getValue(), getLengthUnit(q1.getUnit()));
-        Quantity<LengthUnit> b = new Quantity<>(q2.getValue(), getLengthUnit(q2.getUnit()));
+        IMeasurable unit1 = getUnit(q1.getType(), q1.getUnit());
+        IMeasurable unit2 = getUnit(q2.getType(), q2.getUnit());
+
+        Quantity<IMeasurable> a = new Quantity<>(q1.getValue(), unit1);
+        Quantity<IMeasurable> b = new Quantity<>(q2.getValue(), unit2);
         boolean result = a.equals(b);
-        repo.save(new QuantityMeasurementEntity("COMPARE", "LENGTH", String.valueOf(result)));
+
+        repo.save(new QuantityMeasurementEntity(
+            "COMPARE", q1.getType(), String.valueOf(result)));
         return result;
     }
 
     @Override
     public QuantityDTO convert(QuantityDTO q, String target) {
-        Quantity<LengthUnit> a = new Quantity<>(q.getValue(), getLengthUnit(q.getUnit()));
-        Quantity<LengthUnit> r = a.convertTo(getLengthUnit(target));
-        repo.save(new QuantityMeasurementEntity("CONVERT", "LENGTH", r.toString()));
-        return new QuantityDTO(r.getValue(), target, "LENGTH");
+        IMeasurable fromUnit = getUnit(q.getType(), q.getUnit());
+        IMeasurable toUnit = getUnit(q.getType(), target);
+
+        Quantity<IMeasurable> a = new Quantity<>(q.getValue(), fromUnit);
+        Quantity<IMeasurable> r = a.convertTo(toUnit);
+
+        repo.save(new QuantityMeasurementEntity(
+            "CONVERT", q.getType(), r.toString()));
+        return new QuantityDTO(r.getValue(), target, q.getType());
     }
 
     @Override
     public QuantityDTO add(QuantityDTO q1, QuantityDTO q2) {
-        Quantity<LengthUnit> a = new Quantity<>(q1.getValue(), getLengthUnit(q1.getUnit()));
-        Quantity<LengthUnit> b = new Quantity<>(q2.getValue(), getLengthUnit(q2.getUnit()));
-        Quantity<LengthUnit> r = a.add(b);
-        repo.save(new QuantityMeasurementEntity("ADD", "LENGTH", r.toString()));
-        return new QuantityDTO(r.getValue(), r.getUnit().name(), "LENGTH");
+        IMeasurable unit1 = getUnit(q1.getType(), q1.getUnit());
+        IMeasurable unit2 = getUnit(q2.getType(), q2.getUnit());
+
+        Quantity<IMeasurable> a = new Quantity<>(q1.getValue(), unit1);
+        Quantity<IMeasurable> b = new Quantity<>(q2.getValue(), unit2);
+        Quantity<IMeasurable> r = a.add(b);
+
+        repo.save(new QuantityMeasurementEntity(
+            "ADD", q1.getType(), r.toString()));
+        return new QuantityDTO(r.getValue(), 
+                               r.getUnit().getUnitName(), q1.getType());
     }
 
     @Override
     public QuantityDTO subtract(QuantityDTO q1, QuantityDTO q2) {
-        Quantity<LengthUnit> a = new Quantity<>(q1.getValue(), getLengthUnit(q1.getUnit()));
-        Quantity<LengthUnit> b = new Quantity<>(q2.getValue(), getLengthUnit(q2.getUnit()));
-        Quantity<LengthUnit> r = a.subtract(b);
-        repo.save(new QuantityMeasurementEntity("SUBTRACT", "LENGTH", r.toString()));
-        return new QuantityDTO(r.getValue(), r.getUnit().name(), "LENGTH");
+        IMeasurable unit1 = getUnit(q1.getType(), q1.getUnit());
+        IMeasurable unit2 = getUnit(q2.getType(), q2.getUnit());
+
+        Quantity<IMeasurable> a = new Quantity<>(q1.getValue(), unit1);
+        Quantity<IMeasurable> b = new Quantity<>(q2.getValue(), unit2);
+        Quantity<IMeasurable> r = a.subtract(b);
+
+        repo.save(new QuantityMeasurementEntity(
+            "SUBTRACT", q1.getType(), r.toString()));
+        return new QuantityDTO(r.getValue(), 
+                               r.getUnit().getUnitName(), q1.getType());
     }
 
     @Override
     public double divide(QuantityDTO q1, QuantityDTO q2) {
-        Quantity<LengthUnit> a = new Quantity<>(q1.getValue(), getLengthUnit(q1.getUnit()));
-        Quantity<LengthUnit> b = new Quantity<>(q2.getValue(), getLengthUnit(q2.getUnit()));
+        IMeasurable unit1 = getUnit(q1.getType(), q1.getUnit());
+        IMeasurable unit2 = getUnit(q2.getType(), q2.getUnit());
+
+        Quantity<IMeasurable> a = new Quantity<>(q1.getValue(), unit1);
+        Quantity<IMeasurable> b = new Quantity<>(q2.getValue(), unit2);
         double r = a.divide(b);
-        repo.save(new QuantityMeasurementEntity("DIVIDE", "LENGTH", String.valueOf(r)));
+
+        repo.save(new QuantityMeasurementEntity(
+            "DIVIDE", q1.getType(), String.valueOf(r)));
         return r;
     }
 
-    // New method - get history by operation
-    public List<QuantityMeasurementEntity> getHistoryByOperation(String operation) {
+    // Get history by operation
+    public List<QuantityMeasurementEntity> getHistoryByOperation(
+            String operation) {
         return repo.findByOperation(operation);
     }
 
-    // New method - get history by measurement type
-    public List<QuantityMeasurementEntity> getHistoryByType(String measurementType) {
+    // Get history by measurement type
+    public List<QuantityMeasurementEntity> getHistoryByType(
+            String measurementType) {
         return repo.findByMeasurementType(measurementType);
     }
 }
