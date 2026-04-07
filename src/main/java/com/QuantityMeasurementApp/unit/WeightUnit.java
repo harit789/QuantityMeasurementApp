@@ -24,13 +24,11 @@ public enum WeightUnit implements IMeasurable {
 
 	@Override
 	public double convertToBaseUnit(double value) {
-		// TODO Auto-generated method stub
-		return 0;
+		return value * factor;
 	}
 
 	@Override
 	public double convertFromBaseUnit(double baseValue) {
-		// TODO Auto-generated method stub
-		return 0;
+		return baseValue/factor;
 	}
 }
