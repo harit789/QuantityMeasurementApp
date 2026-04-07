@@ -1,10 +1,13 @@
 # Maven
 target/
 
+.gitignore
+
 # Eclipse / IDE files
 .settings/
 .classpath
 .project
+.factorypath
 
 # OS files
 .DS_Store
@@ -19,5 +22,5 @@ Thumbs.db
 
 .env
 
-.gitignore
+
 
