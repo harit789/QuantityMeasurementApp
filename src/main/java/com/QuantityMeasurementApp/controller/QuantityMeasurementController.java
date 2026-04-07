@@ -92,6 +92,8 @@ public class QuantityMeasurementController {
         public QuantityDTO getQ() { return q; }
         public void setQ(QuantityDTO q) { this.q = q; }
         public String getTargetUnit() { return targetUnit; }
-        public void setTargetUnit(String targetUnit) { this.targetUnit = targetUnit; }
+        public void setTargetUnit(String targetUnit) { 
+            this.targetUnit = targetUnit; 
+        }
     }
 }

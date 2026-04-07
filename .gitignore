@@ -1,110 +1,26 @@
-# =========================
-
-# Java / Spring Boot
-
-# =========================
-
+# Maven
 target/
-build/
-out/
-*.class
-*.jar
-*.war
-*.ear
-*.log
-# Ignore Eclipse factory path
+
+.gitignore
+
+# Eclipse / IDE files
+.settings/
+.classpath
+.project
 .factorypath
 
-# Spring Boot specific
-
-*.pid
-*.seed
-*.pid.lock
-*.out
-*.err
-*.log
-logs/
-
-# =========================
-
-# Eclipse
-
-# =========================
-
-.metadata/
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-
-# Eclipse project files
-
-.project
-.classpath
-.settings/
-
-# =========================
-
-# IDE (General)
-
-# =========================
-
-.idea/
-*.iml
-
-# =========================
-
 # OS files
-
-# =========================
-
 .DS_Store
 Thumbs.db
 
-# =========================
-
-# Environment files
-
-# =========================
-
-.env
-.env.*
-
-# =========================
-
-# Maven
-
-# =========================
-
-.mvn/wrapper/maven-wrapper.jar
-
-# =========================
-
-# Gradle
-
-# =========================
-
-.gradle/
-build/
-
-# =========================
-
 # Logs
-
-# =========================
-
 *.log
 
-# =========================
-
 # Temporary files
-
-# =========================
-
 *.tmp
-*.temp
+*.swp
 
-.gitignore
+.env
+
+
+
