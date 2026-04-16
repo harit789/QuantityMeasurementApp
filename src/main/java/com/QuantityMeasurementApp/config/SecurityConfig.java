@@ -66,8 +66,8 @@ public class SecurityConfig {
             )
             // Stateless session - no server side sessions
             .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+            	    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            	)
             // Allow H2 console frames
             .headers(headers -> headers
                 .frameOptions(frame -> frame.disable())

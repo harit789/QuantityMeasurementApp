@@ -54,10 +54,7 @@ public class OAuth2SuccessHandler
 
         // Redirect to a URL with the token
         // Frontend can extract token from URL
-        String redirectUrl = "https://bejewelled-pasca-291170.netlify.app/index.html" 
-                             + "?token=" + token 
-                             + "&username=" + email;
-
+        String redirectUrl = "http://localhost:8080/auth/oauth2/success"+"?token="  + token + "&username=" + email;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }
