@@ -61,6 +61,11 @@ public class SecurityConfig {
                 .requestMatchers("/auth/oauth2/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers(
+                	    "/swagger-ui/**",
+                	    "/swagger-ui.html",
+                	    "/v3/api-docs/**"
+                	).permitAll()
                 // All other endpoints need JWT token
                 .anyRequest().authenticated()
             )
