@@ -1,14 +1,13 @@
-# Stage 1: Build
-FROM maven:3.9-eclipse-temurin-21-alpine AS builder
+# Stage 1: Build the JAR using Maven
+FROM eclipse-temurin:21-jdk-alpine AS builder
 WORKDIR /app
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
 COPY src ./src
-RUN mvn clean package -DskipTests -B
+RUN ./mvnw package -DskipTests || (apk add --no-cache maven && mvn package -DskipTests)
 
-# Stage 2: Run
-FROM eclipse-temurin:21-jre-alpine
+# Stage 2: Run the JAR
+FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
+COPY --from=builder /app/target/quantity-measurement-app-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dserver.port=${PORT}", "-jar", "app.jar"]
